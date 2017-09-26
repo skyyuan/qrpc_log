@@ -15,4 +15,12 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
+	beego.GlobalControllerRouter["qrpc_log/controllers:QlogsController"] = append(beego.GlobalControllerRouter["qrpc_log/controllers:QlogsController"],
+		beego.ControllerComments{
+			Method: "SocketTime",
+			Router: `/get_socket_time`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
 }

@@ -15,7 +15,7 @@ func EchoHandler(ws *websocket.Conn) {
 		}
 		fmt.Printf("Read: ", msg[:n])
 		if n > 0 {
-			send_msg := "[" + string(msg[0:n]) + "]"
+			send_msg := msg[:n]
 			m, err := ws.Write([]byte(send_msg))
 			if err != nil {
 				log.Fatal(err)

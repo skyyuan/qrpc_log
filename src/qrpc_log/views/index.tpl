@@ -55,29 +55,28 @@
     <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 
     <script>
-    var dataa;
-      $(function() {
-        setTimeout(function() {
+        var dataa;
+        $(function() {
             var ws = new WebSocket("ws://localhost:8100/echo");
             var $tables = $('#tbody');
             ws.onmessage = function(e) {
                 $tables.append(event.data)
             };
+
             setInterval(function(){
                 $.get('/qrpc_log/qlogs/get_socket_time').done(function(data) {
-                dataa = data
+                   dataa = data
                    for(var i=0;i<data.length;i++){
                       html = "<tr><td>" + data[i]['BFlag'] +  "</td><td>" + data[i]['BType'] +  "</td><td>" + data[i]['Content'] +  "</td><td>" + data[i]['Level'] +  "</td><td>" + data[i]['created_at'] +  "</td></tr>"
                       ws.send(html);
                    }
                 })
             }, 5000)
-        }, 1000)
-      });
+        });
     </script>
 </head>
 <body>
-<ul id="msg-list"></ul>
+<ul id="msg-list"><input type="hidden" id="last_time" value="{{ .qlogs }}"></ul>
 <div class="gridSection">
     <table class="table table-hover">
         <thead>
@@ -90,7 +89,25 @@
             </tr>
         </thead>
         <tbody id="tbody">
-            <!-- ngRepeat: item in store -->
+            {{range .qlogs}}
+                <tr>
+                    <td>
+                        {{ .BFlag }}
+                    </td>
+                    <td>
+                        {{ .BType }}
+                    </td>
+                    <td>
+                        {{ .Content }}
+                    </td>
+                    <td>
+                        {{ .Level }}
+                    </td>
+                    <td>
+                        {{ .CreatedAt }}
+                    </td>
+                </tr>
+            {{end}}
         </tbody>
     </table>
 </div>

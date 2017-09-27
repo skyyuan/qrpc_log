@@ -16,7 +16,7 @@ type QLog struct {
 
 func GetQlogs(db *mgo.Database)(qlogs []QLog, err error){
 	collection := db.C("qlogs")
-	err = collection.Find(nil).Sort("-created_at").All(&qlogs)
+	err = collection.Find(nil).Limit(10).Sort("-created_at").All(&qlogs)
 	return
 	return
 }

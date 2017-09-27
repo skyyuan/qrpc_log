@@ -12,8 +12,10 @@ type QlogsController struct {
 
 // @router / [get]
 func (c *QlogsController) Get() {
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
+	mdb, mSession := utils.GetMgoDbSession()
+	defer mSession.Close()
+	qlogs, _ := models.GetQlogs(mdb)
+	c.Data["qlogs"] = qlogs
 	c.TplName = "index.tpl"
 }
 

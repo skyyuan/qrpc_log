@@ -10,7 +10,7 @@ import (
 
 func main() {
 	go beego.Run()
-	http.Handle("/echo", websocket.Handler(socket.EchoHandler))
+	go http.Handle("/echo", websocket.Handler(socket.EchoHandler))
 	err := http.ListenAndServe(":8100", nil)
 	if err != nil {
 		panic("ListenAndServe: " + err.Error())

@@ -53,27 +53,30 @@
     <meta charset="UTF-8"/>
     <title>Sample of websocket with golang</title>
     <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
-
     <script>
         var dataa;
         $(function() {
             var ws = new WebSocket("ws://localhost:8100/echo");
             var $tables = $('#tbody');
             ws.onmessage = function(e) {
-                $tables.append(event.data)
+                $tables.prepend(event.data)
             };
 
             setInterval(function(){
-                $.get('/qrpc_log/qlogs/get_socket_time').done(function(data) {
-                   dataa = data
-                   for(var i=0;i<data.length;i++){
-                      html = "<tr><td>" + data[i]['BFlag'] +  "</td><td>" + data[i]['BType'] +  "</td><td>" + data[i]['Content'] +  "</td><td>" + data[i]['Level'] +  "</td><td>" + data[i]['created_at'] +  "</td></tr>"
-                      ws.send(html);
+                time = $("table").find("tbody tr").first().find('td').last().text()
+
+                $.get('/qrpc_log/qlogs/get_socket_time?time=' + time).done(function(data) {
+                   if(data != null) {
+                       for(i=data.length-1; i>=0; i--){
+                          html = "<tr><td>" + data[i]['flag'] +  "</td><td>" + data[i]['type'] +  "</td><td>" + data[i]['content'] +  "</td><td>" + data[i]['level'] +  "</td><td>" + data[i]['time'] +  "</td></tr>"
+                          ws.send(html);
+                       }
                    }
                 })
             }, 5000)
         });
     </script>
+
 </head>
 <body>
 <ul id="msg-list"><input type="hidden" id="last_time" value="{{ .qlogs }}"></ul>
@@ -92,19 +95,19 @@
             {{range .qlogs}}
                 <tr>
                     <td>
-                        {{ .BFlag }}
+                        {{ .flag }}
                     </td>
                     <td>
-                        {{ .BType }}
+                        {{ .type }}
                     </td>
                     <td>
-                        {{ .Content }}
+                        {{ .content }}
                     </td>
                     <td>
-                        {{ .Level }}
+                        {{ .level }}
                     </td>
                     <td>
-                        {{ .CreatedAt }}
+                        {{ .time }}
                     </td>
                 </tr>
             {{end}}

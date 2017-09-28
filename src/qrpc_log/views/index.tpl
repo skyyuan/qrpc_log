@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<link rel="stylesheet" href="/qrpc_log/bootstrap/css/bootstrap.min.css"/>
 <style>
     .table {
         background: #FFF;
@@ -48,11 +49,18 @@
     td{
         text-align: -webkit-center;
     }
+    th {
+            text-align: -webkit-center;
+    }
+    .margin-top, .margin-top-1 {
+        margin-top: 8px !important;
+        text-align: -webkit-center;
+    }
 </style>
 <head>
     <meta charset="UTF-8"/>
     <title>Sample of websocket with golang</title>
-    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/qrpc_log/js/jquery-2.1.4.min.js"></script>
     <script>
         var dataa;
         $(function() {
@@ -64,8 +72,9 @@
 
             setInterval(function(){
                 time = $("table").find("tbody tr").first().find('td').last().text()
-
-                $.get('/qrpc_log/qlogs/get_socket_time?time=' + time).done(function(data) {
+                log_level = $("#log_level").val()
+                log_type = $("#log_type").val()
+                $.get('/qrpc_log/qlogs/get_socket_time?time=' + time + '&level=' + log_level + '&type=' + log_type).done(function(data) {
                    if(data != null) {
                        for(i=data.length-1; i>=0; i--){
                           html = "<tr><td>" + data[i]['flag'] +  "</td><td>" + data[i]['type'] +  "</td><td>" + data[i]['content'] +  "</td><td>" + data[i]['level'] +  "</td><td>" + data[i]['time'] +  "</td></tr>"
@@ -79,7 +88,17 @@
 
 </head>
 <body>
-<ul id="msg-list"><input type="hidden" id="last_time" value="{{ .qlogs }}"></ul>
+<form class="form-inline ng-pristine ng-valid margin-top" role="form">
+    <div class="form-group">
+        <label class="control-label">日志类型：</label>
+        <input type="text" class="form-control ng-pristine ng-valid" size="15" id="log_type">
+    </div>
+    <div class="form-group">
+        <label class="control-label">日志级别：</label>
+        <input type="text" class="form-control ng-pristine ng-valid" size="15" id="log_level">
+    </div>
+
+</form>
 <div class="gridSection">
     <table class="table table-hover">
         <thead>

@@ -36,14 +36,16 @@ func (c *QlogsController) Get() {
 // @router /get_socket_time [get]
 func (c *QlogsController) SocketTime() {
 	str := c.GetString("time")
+	logType := c.GetString("type")
+	level := c.GetString("level")
 	str = strings.TrimSpace(str)
 	t2, _ := time.Parse("2006-01-02 15:04:05", str)
 	//fmt.Println(t2.UTC()) UTC时间
 	cst,_ := time.LoadLocation("Local")
-	//fmt.Println(t2.In(cst)) CST时间
+	//fmt.Println(t2.In(cst))// CST时间
 	mdb, mSession := utils.GetMgoDbSession()
 	defer mSession.Close()
-	qlogs, _ := models.GetQlogsByTime(mdb, t2.In(cst))
+	qlogs, _ := models.GetQlogsByTime(mdb, t2.In(cst), level, logType)
 	var results []map[string]interface{}
 	for _, q := range qlogs {
 		timestamp := q.CreatedAt

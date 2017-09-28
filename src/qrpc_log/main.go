@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+	beego.SetStaticPath("/qrpc_log", "static")
 	go beego.Run()
 	go http.Handle("/echo", websocket.Handler(socket.EchoHandler))
 	err := http.ListenAndServe(":8100", nil)

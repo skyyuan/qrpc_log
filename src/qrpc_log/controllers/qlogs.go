@@ -6,6 +6,7 @@ import (
 	"qrpc_log/models"
 	"time"
 	"strings"
+	"fmt"
 )
 
 type QlogsController struct {
@@ -30,7 +31,7 @@ func (c *QlogsController) Get() {
 		results = append(results, result)
 	}
 	c.Data["qlogs"] = results
-	c.TplName = "index.tpl"
+	c.TplName = "qlogs/index.tpl"
 }
 
 // @router /get_socket_time [get]
@@ -38,6 +39,8 @@ func (c *QlogsController) SocketTime() {
 	str := c.GetString("time")
 	logType := c.GetString("type")
 	level := c.GetString("level")
+	fmt.Println(logType)
+	fmt.Println(level)
 	str = strings.TrimSpace(str)
 	t2, _ := time.Parse("2006-01-02 15:04:05", str)
 	//fmt.Println(t2.UTC()) UTC时间

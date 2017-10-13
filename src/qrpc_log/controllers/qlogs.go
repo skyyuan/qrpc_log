@@ -17,7 +17,9 @@ type QlogsController struct {
 func (c *QlogsController) Get() {
 	mdb, mSession := utils.GetMgoDbSession()
 	defer mSession.Close()
-	qlogs, _ := models.GetQlogs(mdb)
+	logType := c.GetString("log_type")
+	level := c.GetString("log_level")
+	qlogs, _ := models.GetQlogsByParams(mdb,level,logType)
 	var results []map[string]interface{}
 	for _, q := range qlogs {
 		timestamp := q.CreatedAt
@@ -63,7 +65,6 @@ func (c *QlogsController) SocketTime() {
 		}
 		results = append(results, result)
 	}
-	c.Data["json"] = results
-	c.ServeJSON()
-	return
+	c.Data["qlogs"] = results
+	c.TplName = "qlogs/index.tpl"
 }

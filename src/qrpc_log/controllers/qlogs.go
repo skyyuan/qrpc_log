@@ -34,6 +34,8 @@ func (c *QlogsController) Get() {
 		results = append(results, result)
 	}
 	c.Data["qlogs"] = results
+	c.Data["log_type"] = logType
+	c.Data["log_level"] = level
 	c.TplName = "qlogs/index.tpl"
 }
 

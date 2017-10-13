@@ -92,11 +92,11 @@
 <form action="/qrpc_log/qlogs" class="form-inline ng-pristine ng-valid margin-top" role="form">
     <div class="form-group">
         <label class="control-label">日志类型：</label>
-        <input type="text" class="form-control ng-pristine ng-valid" size="15" id="log_type" name="log_type"/>
+        <input type="text" class="form-control ng-pristine ng-valid" size="15" id="log_type" name="log_type" value="{{ .log_type }}"/>
     </div>
     <div class="form-group">
         <label class="control-label">日志级别：</label>
-        <input type="text" class="form-control ng-pristine ng-valid" size="15" id="log_level" name="log_level"/>
+        <input type="text" class="form-control ng-pristine ng-valid" size="15" id="log_level" name="log_level" value="{{ .log_level }}"/>
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-default">搜索</button>

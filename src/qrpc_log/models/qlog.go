@@ -20,10 +20,9 @@ func GetQlogs(db *mgo.Database)(qlogs []QLog, err error){
 	collection := db.C("qlogs")
 	err = collection.Find(nil).Limit(10).Sort("-created_at").All(&qlogs)
 	return
-	return
 }
 
-func GetQlogsByParams(db *mgo.Database, level, bType, traceId, content string)(qlogs []QLog, err error){
+func GetQlogsByParams(db *mgo.Database, level, bType, traceId, content string, page int)(qlogs []QLog, err error){
 	collection := db.C("qlogs")
 	query := bson.M{}
 	if level != "" {
@@ -38,7 +37,26 @@ func GetQlogsByParams(db *mgo.Database, level, bType, traceId, content string)(q
 	if content != "" {
 		query["content"] = bson.M{"$regex": content}
 	}
-	err = collection.Find(query).Limit(10).Sort("-created_at").All(&qlogs)
+	err = collection.Find(query).Limit(10).Skip((page-1) * 10).Sort("-created_at").All(&qlogs)
+	return
+}
+
+func GetAllQlogsCount(db *mgo.Database, level, bType, traceId, content string)(count int, err error){
+	collection := db.C("qlogs")
+	query := bson.M{}
+	if level != "" {
+		query["level"] = level
+	}
+	if bType != "" {
+		query["b_type"] = bType
+	}
+	if traceId != "" {
+		query["trace_id"] = traceId
+	}
+	if content != "" {
+		query["content"] = bson.M{"$regex": content}
+	}
+	count, err = collection.Find(query).Count()
 	return
 }
 

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/utils/pagination"
 	"qrpc_log/utils"
 	"qrpc_log/models"
 	"time"
@@ -21,7 +22,11 @@ func (c *QlogsController) Get() {
 	level := c.GetString("log_level")
 	traceId := c.GetString("trace_id")
 	content := c.GetString("content")
-	qlogs, _ := models.GetQlogsByParams(mdb,level,logType,traceId,content)
+	page, _ := c.GetInt("p")
+	if page < 1 {
+		page = 1
+	}
+	qlogs, _ := models.GetQlogsByParams(mdb,level,logType,traceId,content,page)
 	var results []map[string]interface{}
 	for _, q := range qlogs {
 		timestamp := q.CreatedAt
@@ -41,6 +46,12 @@ func (c *QlogsController) Get() {
 	c.Data["log_level"] = level
 	c.Data["trace_id"] = traceId
 	c.Data["content"] = content
+	c.Data["showNewest"] = (page == 1)
+	count, _ := models.GetAllQlogsCount(mdb,level,logType,traceId,content)
+	maxCount := int64(count)
+	perPage := 10
+	paginator := pagination.SetPaginator(c.Ctx, perPage, maxCount)
+	c.Data["paginator"] = paginator
 	c.TplName = "qlogs/index.tpl"
 }
 

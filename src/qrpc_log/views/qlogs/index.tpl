@@ -61,6 +61,7 @@
     <meta charset="UTF-8"/>
     <title>Sample of websocket with golang</title>
     <script src="/qrpc_log/js/jquery-2.1.4.min.js"></script>
+    {{if .showNewest }}
     <script>
         var dataa;
         $(function() {
@@ -88,7 +89,7 @@
             }, 5000)
         });
     </script>
-
+   {{end }}
 </head>
 <body>
 <form action="/qrpc_log/qlogs" class="form-inline ng-pristine ng-valid margin-top" role="form">
@@ -151,5 +152,28 @@
         </tbody>
     </table>
 </div>
+{{if .paginator.HasPages}}
+<ul class="pagination pagination">
+    {{if .paginator.HasPrev}}
+        <li><a href="{{.paginator.PageLinkFirst}}">首页</a></li>
+        <li><a href="{{.paginator.PageLinkPrev}}">&laquo;</a></li>
+    {{else}}
+        <li class="disabled"><a>首页</a></li>
+        <li class="disabled"><a>&laquo;</a></li>
+    {{end}}
+    {{range $index, $page := .paginator.Pages}}
+    <li{{if $.paginator.IsActive .}} class="active"{{end}}>
+    <a href="{{$.paginator.PageLink $page}}">{{$page}}</a>
+    </li>
+{{end}}
+{{if .paginator.HasNext}}
+    <li><a href="{{.paginator.PageLinkNext}}">&raquo;</a></li>
+    <li><a href="{{.paginator.PageLinkLast}}">最后一页</a></li>
+{{else}}
+    <li class="disabled"><a>&raquo;</a></li>
+    <li class="disabled"><a>最后一页</a></li>
+{{end}}
+</ul>
+{{end}}
 </body>
 </html>

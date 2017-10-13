@@ -33,5 +33,4 @@ func GetQlogsByTime(db *mgo.Database, time time.Time, level, bType string)(qlogs
 	}
 	err = collection.Find(query).Sort("-created_at").All(&qlogs)
 	return
-	return
 }

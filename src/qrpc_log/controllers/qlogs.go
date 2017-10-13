@@ -27,6 +27,7 @@ func (c *QlogsController) Get() {
 			"level": q.Level,
 			"content": q.Content,
 			"time":  timestamp.Format("2006-01-02 15:04:05"),
+			"correct_time": timestamp.Format("2006-01-02 15:04:05.999999999"),
 		}
 		results = append(results, result)
 	}
@@ -58,6 +59,7 @@ func (c *QlogsController) SocketTime() {
 			"level": q.Level,
 			"content": q.Content,
 			"time":  timestamp.Format("2006-01-02 15:04:05"),
+			"correct_time": timestamp.Format("2006-01-02 15:04:05.999999999"),
 		}
 		results = append(results, result)
 	}

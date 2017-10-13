@@ -64,24 +64,25 @@
     <script>
         var dataa;
         $(function() {
-            var ws = new WebSocket("ws://lws.qychbb.com/echo");
+            var ws = new WebSocket("ws://127.0.0.1:8100/echo");
             var $tables = $('#tbody');
             ws.onmessage = function(e) {
-                $tables.prepend(event.data)
+                html = ""
+                if(event.data != "null"){
+                    results = JSON.parse(event.data)
+                    $.each(results, function (i, item) {
+                        html = html + "<tr><td>" + item['flag'] +  "</td><td>" + item['type'] +  "</td><td>" + item['content'] +  "</td><td>" + item['level'] +  "</td><td data-time='" + item['correct_time'] +  "'>" + item['time'] +  "</td></tr>"
+                    })
+                    $tables.prepend(html)
+                }
             };
 
             setInterval(function(){
-                time = $("table").find("tbody tr").first().find('td').last().text()
+                time = $("table").find("tbody tr").first().find('td').last().data("time")
                 log_level = $("#log_level").val()
                 log_type = $("#log_type").val()
-                $.get('/qrpc_log/qlogs/get_socket_time?time=' + time + '&level=' + log_level + '&type=' + log_type).done(function(data) {
-                   if(data != null) {
-                       for(i=data.length-1; i>=0; i--){
-                          html = "<tr><td>" + data[i]['flag'] +  "</td><td>" + data[i]['type'] +  "</td><td>" + data[i]['content'] +  "</td><td>" + data[i]['level'] +  "</td><td>" + data[i]['time'] +  "</td></tr>"
-                          ws.send(html);
-                       }
-                   }
-                })
+                var params = 'time=' + time + '&level=' + log_level + '&type=' + log_type;
+                ws.send(params);
             }, 5000)
         });
     </script>
@@ -125,7 +126,7 @@
                     <td>
                         {{ .level }}
                     </td>
-                    <td>
+                    <td data-time="{{ .correct_time }}">
                         {{ .time }}
                     </td>
                 </tr>

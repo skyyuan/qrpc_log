@@ -99,7 +99,11 @@
     </div>
     <div class="form-group">
         <label class="control-label">日志级别：</label>
-        <input type="text" class="form-control ng-pristine ng-valid" size="15" id="log_level" name="log_level" value="{{ .log_level }}"/>
+        <select id="log_level" name="log_level"  class="form-control">
+            <option value="info" {{if eq .log_level "info"}} selected{{end}}>info</option>
+            <option value="error" {{if eq .log_level "error"}} selected{{end}}>error</option>
+            <option value="fatal" {{if eq .log_level "fatal"}} selected{{end}}>fatal</option>
+        </select>
     </div>
     <div class="form-group">
         <label class="control-label">traceid：</label>

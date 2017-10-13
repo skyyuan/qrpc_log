@@ -64,7 +64,7 @@
     <script>
         var dataa;
         $(function() {
-            var ws = new WebSocket("ws://ws.qychbb.com/echo");
+            var ws = new WebSocket("ws://lws.qychbb.com/echo");
             var $tables = $('#tbody');
             ws.onmessage = function(e) {
                 html = ""

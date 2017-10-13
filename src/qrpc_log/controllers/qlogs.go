@@ -19,7 +19,9 @@ func (c *QlogsController) Get() {
 	defer mSession.Close()
 	logType := c.GetString("log_type")
 	level := c.GetString("log_level")
-	qlogs, _ := models.GetQlogsByParams(mdb,level,logType)
+	traceId := c.GetString("trace_id")
+	content := c.GetString("content")
+	qlogs, _ := models.GetQlogsByParams(mdb,level,logType,traceId,content)
 	var results []map[string]interface{}
 	for _, q := range qlogs {
 		timestamp := q.CreatedAt
@@ -28,6 +30,7 @@ func (c *QlogsController) Get() {
 			"flag": q.BFlag,
 			"level": q.Level,
 			"content": q.Content,
+			"trace_id":q.TraceId,
 			"time":  timestamp.Format("2006-01-02 15:04:05"),
 			"correct_time": timestamp.Format("2006-01-02 15:04:05.999999999"),
 		}
@@ -36,6 +39,8 @@ func (c *QlogsController) Get() {
 	c.Data["qlogs"] = results
 	c.Data["log_type"] = logType
 	c.Data["log_level"] = level
+	c.Data["trace_id"] = traceId
+	c.Data["content"] = content
 	c.TplName = "qlogs/index.tpl"
 }
 
@@ -44,6 +49,8 @@ func (c *QlogsController) SocketTime() {
 	str := c.GetString("time")
 	logType := c.GetString("type")
 	level := c.GetString("level")
+	traceId := c.GetString("trace_id")
+	content := c.GetString("content")
 	fmt.Println(logType)
 	fmt.Println(level)
 	str = strings.TrimSpace(str)
@@ -53,7 +60,7 @@ func (c *QlogsController) SocketTime() {
 	//fmt.Println(t2.In(cst))// CST时间
 	mdb, mSession := utils.GetMgoDbSession()
 	defer mSession.Close()
-	qlogs, _ := models.GetQlogsByTime(mdb, t2.In(cst), level, logType)
+	qlogs, _ := models.GetQlogsByTime(mdb, t2.In(cst), level, logType,traceId,content)
 	var results []map[string]interface{}
 	for _, q := range qlogs {
 		timestamp := q.CreatedAt

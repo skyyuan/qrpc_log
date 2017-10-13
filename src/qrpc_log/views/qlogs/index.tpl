@@ -64,14 +64,14 @@
     <script>
         var dataa;
         $(function() {
-            var ws = new WebSocket("ws://lws.qychbb.com/echo");
+            var ws = new WebSocket("ws://ws.qychbb.com/echo");
             var $tables = $('#tbody');
             ws.onmessage = function(e) {
                 html = ""
                 if(event.data != "null"){
                     results = JSON.parse(event.data)
                     $.each(results, function (i, item) {
-                        html = html + "<tr><td>" + item['flag'] +  "</td><td>" + item['type'] +  "</td><td>" + item['content'] +  "</td><td>" + item['level'] +  "</td><td data-time='" + item['correct_time'] +  "'>" + item['time'] +  "</td></tr>"
+                        html = html + "<tr><td>" + item['flag'] +  "</td><td>" + item['type'] +  "</td><td>" + item['content'] +  "</td><td>" + item['level'] + "</td><td>" + item['trace_id'] +  "</td><td data-time='" + item['correct_time'] +  "'>" + item['time'] +  "</td></tr>"
                     })
                     $tables.prepend(html)
                 }
@@ -81,7 +81,9 @@
                 time = $("table").find("tbody tr").first().find('td').last().data("time")
                 log_level = $("#log_level").val()
                 log_type = $("#log_type").val()
-                var params = 'time=' + time + '&level=' + log_level + '&type=' + log_type;
+                trace_id =  $("#trace_id").val()
+                content = $("#content").val()
+                var params = 'time=' + time + '&level=' + log_level + '&type=' + log_type + '&trace_id=' + trace_id+ '&content=' + content;
                 ws.send(params);
             }, 5000)
         });
@@ -99,6 +101,14 @@
         <input type="text" class="form-control ng-pristine ng-valid" size="15" id="log_level" name="log_level" value="{{ .log_level }}"/>
     </div>
     <div class="form-group">
+        <label class="control-label">traceid：</label>
+        <input type="text" class="form-control ng-pristine ng-valid" size="15" id="trace_id" name="trace_id" value="{{ .trace_id }}"/>
+    </div>
+    <div class="form-group">
+        <label class="control-label">详情：</label>
+        <input type="text" class="form-control ng-pristine ng-valid" size="15" id="content" name="content" value="{{ .content }}"/>
+    </div>
+    <div class="form-group">
         <button type="submit" class="btn btn-default">搜索</button>
     </div>
 
@@ -111,6 +121,7 @@
                 <th>日志类型</th>
                 <th>日志详情</th>
                 <th>日志级别</th>
+                <th>traceid</th>
                 <th>操作日期</th>
             </tr>
         </thead>
@@ -128,6 +139,9 @@
                     </td>
                     <td>
                         {{ .level }}
+                    </td>
+                    <td>
+                        {{ .trace_id }}
                     </td>
                     <td data-time="{{ .correct_time }}">
                         {{ .time }}

@@ -28,6 +28,8 @@ func EchoHandler(ws *websocket.Conn) {
 			str := params.Get("time")
 			logType := params.Get("type")
 			level := params.Get("level")
+			traceId := params.Get("trace_id")
+			content := params.Get("content")
 			fmt.Println("type:%s", logType)
 			fmt.Println("level:%s", level)
 			str = strings.TrimSpace(str)
@@ -39,7 +41,7 @@ func EchoHandler(ws *websocket.Conn) {
 			mdb, mSession := utils.GetMgoDbSession()
 			defer mSession.Close()
 			fmt.Println(t2)
-			qlogs, _ := models.GetQlogsByTime(mdb, t2, level, logType)
+			qlogs, _ := models.GetQlogsByTime(mdb, t2, level, logType,traceId,content)
 			fmt.Println(len(qlogs))
 			var results []map[string]interface{}
 			for _, q := range qlogs {
@@ -49,6 +51,7 @@ func EchoHandler(ws *websocket.Conn) {
 					"flag": q.BFlag,
 					"level": q.Level,
 					"content": q.Content,
+					"trace_id":q.TraceId,
 					"time":  timestamp.Format("2006-01-02 15:04:05"),
 					"correct_time": timestamp.Format("2006-01-02 15:04:05.999999999"),
 				}

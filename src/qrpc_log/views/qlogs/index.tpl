@@ -56,6 +56,12 @@
         margin-top: 8px !important;
         text-align: -webkit-center;
     }
+    .table tbody tr td{
+        max-width: 500px;
+        overflow: hidden;
+        word-break: break-all;
+        word-wrap:break-word;
+    }
 </style>
 <head>
     <meta charset="UTF-8"/>

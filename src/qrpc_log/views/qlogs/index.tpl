@@ -146,7 +146,9 @@
                         {{ .level }}
                     </td>
                     <td>
-                        {{ .trace_id }}
+                        {{if ne .trace_id ""}}
+                        <a href="/qrpc_log/qlogs?trace_id={{ .trace_id }}">{{ .trace_id }}</a>
+                        {{end}}
                     </td>
                     <td data-time="{{ .correct_time }}">
                         {{ .time }}

@@ -72,7 +72,7 @@
                 if(event.data != "null"){
                     results = JSON.parse(event.data)
                     $.each(results, function (i, item) {
-                        html = html + "<tr><td>" + item['flag'] +  "</td><td>" + item['type'] +  "</td><td>" + item['content'] +  "</td><td>" + item['level'] + "</td><td>" + item['trace_id'] +  "</td><td data-time='" + item['correct_time'] +  "'>" + item['time'] +  "</td></tr>"
+                        html = html + "<tr><td>" + item['flag'] +  "</td><td>" + item['type'] +  "</td><td>" + item['content'] +  "</td><td>" + item['level'] + "</td><td>" + "<a href='/qrpc_log/qlogs?trace_id=" + item['trace_id'] + "'>" + item['trace_id'] + "</a>" +  "</td><td data-time='" + item['correct_time'] +  "'>" + item['time'] +  "</td></tr>"
                     })
                     $tables.prepend(html)
                 }
